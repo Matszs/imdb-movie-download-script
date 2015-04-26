@@ -6,8 +6,8 @@ class DownloadManager {
 
     public function __construct($details = array()) {
         $defaultDetails = array(
-            'movie_start' => 78,
-            'movie_end' => 78,
+            'movie_start' => 1,
+            'movie_end' => 100,
             'movie_location' => 'videos',
             'thumbnail_location' => 'thumbs',
             'save_thumbnail' => true,
