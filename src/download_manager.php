@@ -82,8 +82,8 @@ class DownloadManager {
                     }
 
                     if($largeImage && $this->_configuration['save_thumbnail'] && file_exists($this->_configuration['thumbnail_location'])) {
-                        $newLargeImage = $this->_configuration['thumbnail_location'] . DS . preg_replace('~[^\\pL\d_]+~u', '', strtolower(str_replace(' ', '_', $movieName))) . '.jpg';
-                        copy($largeImage, $newLargeImage);
+                        $newLargeImage = preg_replace('~[^\\pL\d_]+~u', '', strtolower(str_replace(' ', '_', $movieName))) . '.jpg';
+                        copy($largeImage, $this->_configuration['thumbnail_location'] . DS . $newLargeImage);
                         $largeImage = $newLargeImage;
                     }
 

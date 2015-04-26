@@ -229,6 +229,7 @@ class yt_downloader implements cnfg
                  */
                 $title = self::get_video_title();
                 $path = self::get_downloads_dir();
+
                 $YT_Video_URL = $vids[$c]["url"];
                 $res = $vids[$c]["type"];
                 $ext = $vids[$c]["ext"];
@@ -258,10 +259,15 @@ class yt_downloader implements cnfg
                     if ($download_thumbs === TRUE) {
                         self::check_thumbs($id);
                     }
-                    touch($video);
-                    chmod($video, 0775);
-// Download the video.
-                    $download = self::curl_get_file($YT_Video_URL, $video);
+
+                    $download = null;
+
+                    for($i = 0; $i < 5; $i++) {
+                        $download = self::curl_get_file($YT_Video_URL, $video);
+                        if(filesize($video) > 0)
+                            break;
+                    }
+
                     if ($download === FALSE) {
                         throw new Exception("Saving $videoFilename to $path failed.");
                         exit();
@@ -668,6 +674,8 @@ class yt_downloader implements cnfg
         $ch = curl_init($remote_file);
         curl_setopt($ch, CURLOPT_USERAGENT, $this->CURL_UA);
         curl_setopt($ch, CURLOPT_REFERER, $this->YT_BASE_URL);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT ,0);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30); //timeout in seconds
         $fp = fopen($local_file, 'w');
         curl_setopt($ch, CURLOPT_FILE, $fp);
         curl_exec($ch);
